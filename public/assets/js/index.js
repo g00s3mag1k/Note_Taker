@@ -38,3 +38,50 @@ const saveNote = (note) =>
     },
     body: JSON.stringify(note),
 });
+
+const deleteNote = (id) =>
+  fetch(`/api/notes/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+});
+
+const renderActiveNote = () => {
+    hide(saveNoteBtn);
+    if (activeNote.id) {
+      noteTitle.setAttribute('readonly', true);
+      noteText.setAttribute('readonly', true);
+      noteTitle.value = activeNote.title;
+      noteText.value = activeNote.text;
+    } else {
+      noteTitle.value = '';
+      noteText.value = '';
+    }
+};
+
+const handleNoteSave = () => {
+    const newNote = {
+      title: noteTitle.value,
+      text: noteText.value,
+    };
+    saveNote(newNote).then(() => {
+      getAndRenderNotes();
+      renderActiveNote();
+    });
+};
+
+const handleNoteView = (e) => {
+    e.preventDefault();
+    activeNote = JSON.parse(e.target.parentElement.getAttribute('data-note'));
+    renderActiveNote();
+};
+
+const handleRenderSaveBtn = () => {
+    if (!noteTitle.value.trim() || !noteText.value.trim()) {
+      hide(saveNoteBtn);
+    } else {
+      show(saveNoteBtn);
+    }
+};
+
