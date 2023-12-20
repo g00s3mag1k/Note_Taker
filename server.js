@@ -28,24 +28,19 @@ app.post('/api/notes', (req, res) => {
 
 app.delete("/api/notes/:id", (req, res) => {
     const noteId = req.params.id;
-
     fs.readFile("db.json", "utf8", (err, data) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send("Internal Server Error");
-        }
-
-        let notes = JSON.parse(data);
-
-        const newNotes = notes.filter((note) => note.id !== parseInt(noteId));
-
-        fs.writeFile("db.json", JSON.stringify(newNotes), (err) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).send("Internal Server Error");
-            }
-
-            return res.status(200).send("Note successfully deleted");
+    if (err) {
+        console.error(err);
+        return res.status(500).send("Internal Server Error");
+    }
+    let notes = JSON.parse(data);
+    const newNotes = notes.filter((note) => note.id !== parseInt(noteId));
+    fs.writeFile("db.json", JSON.stringify(newNotes), (err) => {
+    if (err) {
+        console.error(err);
+        return res.status(500).send("Internal Server Error");
+    }
+        return res.status(200).send("Note successfully deleted");
         });
     });
 });
