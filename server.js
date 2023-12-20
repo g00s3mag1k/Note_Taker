@@ -1,30 +1,18 @@
-// Required Dependencies
-const express = require('express');
 const fs = require('fs');
+const express = require('express');
 const path = require('path');
-
-// Create express app
+const PORT = process.env.PORT || 3001;
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Routes
-// Landing Page
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-// Notes Page - Existing Notes
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'notes.html'));
-});
-
-// API routes for getting and saving notes
-app.get('/api/notes', (req, res) => {
+app.get('/', (_req, res) =>
+    res.sendFile(path.join(__dirname, 'public', 'index.html')));
+app.get('/notes', (_req, res) =>
+    res.sendFile(path.join(__dirname, 'public', 'notes.html')));
+app.get('/api/notes', (_req, res) => {
     const notes = JSON.parse(fs.readFileSync(path.join(__dirname, 'db.json')));
     res.json(notes);
 });
@@ -38,7 +26,6 @@ app.post('/api/notes', (req, res) => {
     res.json(newNote);
 });
 
-// Start the server
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
